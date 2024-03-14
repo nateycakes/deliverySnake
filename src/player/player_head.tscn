@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://ch4olig3s73cn"]
+
+[ext_resource type="Script" path="res://src/player/player_head.gd" id="1_8rwdh"]
+[ext_resource type="Texture2D" uid="uid://b1a67uw6hhvvd" path="res://assets/head segment.png" id="2_ucj24"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8fvc0"]
+size = Vector2(32, 32)
+
+[node name="PlayerHead" type="Area2D"]
+collision_layer = 4
+collision_mask = 11
+script = ExtResource("1_8rwdh")
+walk_speed_value = 0.1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ucj24")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_8fvc0")
+
+[node name="WallDetector" type="RayCast2D" parent="."]
+
+[node name="WalkSpeedTimer" type="Timer" parent="."]
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="timeout" from="WalkSpeedTimer" to="." method="_on_walk_speed_timer_timeout"]

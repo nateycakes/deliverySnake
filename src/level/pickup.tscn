@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cot0e7ru6imoj"]
+
+[ext_resource type="Script" path="res://src/level/pickup.gd" id="1_6bokg"]
+[ext_resource type="Texture2D" uid="uid://b35502gau05ad" path="res://assets/pickup.png" id="1_pvptk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kk8gw"]
+size = Vector2(32, 32)
+
+[node name="Pickup" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_6bokg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_pvptk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_kk8gw")

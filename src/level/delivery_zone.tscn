@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bieuu7ive1ax0"]
+
+[ext_resource type="Script" path="res://src/level/delivery_zone.gd" id="1_jelba"]
+
+[node name="DeliveryZone" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_jelba")
