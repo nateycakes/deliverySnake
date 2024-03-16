@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://8yfo1exw7cc0"]
+
+[ext_resource type="Script" path="res://src/level/level_template.gd" id="1_5ekxv"]
+[ext_resource type="PackedScene" uid="uid://e5w8e0bs8y0j" path="res://src/level/level_tiles.tscn" id="1_sjqa6"]
+[ext_resource type="PackedScene" uid="uid://bieuu7ive1ax0" path="res://src/level/delivery_zone.tscn" id="3_6qo40"]
+
+[node name="LevelTemplate" type="Node2D"]
+script = ExtResource("1_5ekxv")
+
+[node name="LevelTiles" parent="." instance=ExtResource("1_sjqa6")]
+
+[node name="PlayerSpawnLocation" type="Marker2D" parent="."]
+
+[node name="DeliveryZone" parent="." instance=ExtResource("3_6qo40")]
+
+[node name="LevelMarker_TL" type="Marker2D" parent="."]
+
+[node name="LevelMarker_TR" type="Marker2D" parent="."]
+
+[node name="LevelMarker_BL" type="Marker2D" parent="."]
+
+[node name="LevelMarker_BR" type="Marker2D" parent="."]

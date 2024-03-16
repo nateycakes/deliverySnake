@@ -123,9 +123,9 @@ func _on_area_entered(area):
 		area.collected.emit()
 		area.queue_free()
 		add_new_body_segment()
-		var excluded_positions = body_segment_positions
+		var excluded_positions = body_segment_positions.duplicate(true)
 		excluded_positions.push_back(global_position)
-		place_new_pickup(GameManager.generate_new_pickup_location(excluded_positions))
+		
 	
 	if area is DeliveryZone:
 		on_enter_delivery_zone()
