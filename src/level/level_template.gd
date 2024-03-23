@@ -1,6 +1,9 @@
 extends Node2D
 class_name Level
 
+
+
+
 @onready var player_spawn_location = $PlayerSpawnLocation
 
 @onready var player_head_scene : PackedScene = preload("res://src/player/player_head.tscn")
@@ -13,6 +16,12 @@ class_name Level
 @onready var level_marker_tr = $LevelMarker_TR
 @onready var level_marker_bl = $LevelMarker_BL
 @onready var level_marker_br = $LevelMarker_BR
+@onready var ui_layer = $UILayer
+
+
+
+
+
 
 @export var debug : bool = false
 
@@ -20,6 +29,8 @@ class_name Level
 func _ready():
 	place_player(player_spawn_location.global_position)
 	place_new_pickup()
+	ui_layer.score_label_container.visible = true
+	ui_layer.game_over_container.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,7 +42,17 @@ func place_player(input_position : Vector2) -> void:
 	player_reference = new_player
 	new_player.global_position = input_position
 	call_deferred("add_child", new_player)
+	if get_tree().paused: #the game will be paused if the player just died
+		get_tree().paused = false
 
+func reset_score():
+	#game_ui.score_label.text = "Score: 0"
+	pass
+
+
+func reset_game():
+	place_player(player_spawn_location.global_position)
+	reset_score()
 
 func place_new_pickup() -> void:
 	

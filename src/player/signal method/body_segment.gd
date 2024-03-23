@@ -6,7 +6,7 @@ signal position_updated(new_position)
 @onready var previous_segment : BodySegment = null
 @onready var next_segment : BodySegment = null
 
-@onready var body_segment_scene : PackedScene = preload("res://src/player/body_segment.tscn")
+@onready var body_segment_scene : PackedScene = preload("res://src/player/signal method/body_segment.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

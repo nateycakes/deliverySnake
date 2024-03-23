@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://by0vk53bxwt4w"]
+
+[ext_resource type="Script" path="res://src/interface/ui_layer.gd" id="1_ljlsk"]
+
+[node name="UILayer" type="CanvasLayer"]
+script = ExtResource("1_ljlsk")
+
+[node name="ScoreLabelContainer" type="HBoxContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScoreLabelContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="ScoreLabelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Score:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverBackground" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.278431, 0.278431, 0.278431, 0.670588)
+
+[node name="GameOverContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverContainer"]
+layout_mode = 2
+
+[node name="GameOverText" type="Label" parent="GameOverContainer/VBoxContainer"]
+layout_mode = 2
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="GameOverContainer/VBoxContainer"]
+layout_mode = 2
+text = "Final Score:"
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="GameOverContainer/VBoxContainer"]
+layout_mode = 2
+text = "Press Enter to retry"
+
+[connection signal="focus_entered" from="GameOverContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_focus_entered"]
+[connection signal="focus_exited" from="GameOverContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_focus_exited"]

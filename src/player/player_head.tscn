@@ -8,7 +8,7 @@ size = Vector2(24, 24)
 
 [node name="PlayerHead" type="Area2D"]
 collision_layer = 4
-collision_mask = 11
+collision_mask = 27
 script = ExtResource("1_8rwdh")
 walk_speed_value = 0.1
 

@@ -3,6 +3,7 @@ class_name PlayerHead
 
 signal hit_wall
 signal position_updated
+signal player_destroyed
 
 @onready var wall_detector = $WallDetector
 @onready var walk_speed_timer = $WalkSpeedTimer
@@ -76,6 +77,7 @@ func move(dir):
 	else:
 		hit_wall.emit()
 		print("oopsie we hit a wall")
+		player_hits_wall()
 		walk_speed_timer.stop() #stop the player from moving since they ded
 
 func update_tail_positions():
@@ -129,6 +131,10 @@ func _on_area_entered(area):
 	
 	if area is DeliveryZone:
 		on_enter_delivery_zone()
+	
+	if area is PlayerBody:
+		print("oops we hit our tail")
+		player_hits_self()
 
 
 func _on_area_exited(area):
@@ -159,6 +165,7 @@ func delivery_success(count : int):
 	var exponent : float = float(count)
 	var delivery_points = pow(GameManager.delivery_base_score, exponent)
 	GameManager.player_score += int(delivery_points)
+	GameManager.delivery_success.emit()
 	sever_tail()
 
 func on_enter_delivery_zone():
@@ -180,5 +187,13 @@ func sever_tail():
 	body_segments.clear()
 	body_segment_positions.clear()
 
+func player_hits_self():
+	get_tree().paused = true
+	player_destroyed.emit()
+	GameManager.game_over.emit() #this is what the UI will listen for
+	walk_speed_timer.stop()
+	sever_tail()
+	queue_free()
 
-
+func player_hits_wall():
+	player_hits_self() #making this separarte for future ideas

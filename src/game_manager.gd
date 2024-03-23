@@ -1,6 +1,9 @@
 extends Node
 
 
+signal delivery_success
+signal game_over
+
 @onready var tile_size : int = 32
 
 
