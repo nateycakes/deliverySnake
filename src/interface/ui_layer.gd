@@ -32,6 +32,7 @@ func _input(event):
 	#game_over_focus will only be true when there's a game over
 	if game_over_focus and event.is_action_pressed("confirm"):
 		get_tree().reload_current_scene()
+		GameManager.player_score = 0 #set this to zero because we KNOW the level is restarting
 
 
 

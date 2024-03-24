@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://e5w8e0bs8y0j"]
+[gd_scene load_steps=6 format=3 uid="uid://e5w8e0bs8y0j"]
 
 [ext_resource type="Texture2D" uid="uid://d1tdvb2l4hruc" path="res://assets/wall.png" id="1_u6ygi"]
+[ext_resource type="Texture2D" uid="uid://3budsij45j75" path="res://assets/delivery zone tile.png" id="2_tptur"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e4rmk"]
 texture = ExtResource("1_u6ygi")
@@ -10,11 +11,19 @@ texture_region_size = Vector2i(32, 32)
 0:0/0/physics_layer_0/angular_velocity = 0.0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_evuc6"]
+texture = ExtResource("2_tptur")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
 [sub_resource type="TileSet" id="TileSet_alwkr"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 4
 sources/0 = SubResource("TileSetAtlasSource_e4rmk")
+sources/1 = SubResource("TileSetAtlasSource_evuc6")
 
 [node name="LevelTiles" type="TileMap"]
 tile_set = SubResource("TileSet_alwkr")

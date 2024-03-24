@@ -22,8 +22,10 @@ signal player_destroyed
 @onready var body_segments : Array = []
 @onready var body_segment_positions : Array = []
 
-@onready var can_deliver : bool = false
+@onready var in_delivery_zone : bool = false
 @onready var delivery_count : int = 0
+
+@export var debug : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -76,7 +78,7 @@ func move(dir):
 		update_tail_positions()
 	else:
 		hit_wall.emit()
-		print("oopsie we hit a wall")
+		if debug: print("oopsie we hit a wall")
 		player_hits_wall()
 		walk_speed_timer.stop() #stop the player from moving since they ded
 
@@ -114,7 +116,7 @@ func snap_to_grid():
 	position += Vector2.ONE * GameManager.tile_size/2
 
 func _on_walk_speed_timer_timeout():
-	if can_deliver:
+	if in_delivery_zone:
 		body_delivery_checks()
 	move(last_direction)
 
@@ -133,7 +135,7 @@ func _on_area_entered(area):
 		on_enter_delivery_zone()
 	
 	if area is PlayerBody:
-		print("oops we hit our tail")
+		if debug: print("oops we hit our tail")
 		player_hits_self()
 
 
@@ -148,6 +150,8 @@ func place_new_pickup(new_pickup_position : Vector2):
 
 
 func body_delivery_checks():
+	if body_segments.size() <= 0:
+		return
 	#reset our counter
 	delivery_count = 0 
 	#iterate through the segments
@@ -169,10 +173,10 @@ func delivery_success(count : int):
 	sever_tail()
 
 func on_enter_delivery_zone():
-	can_deliver = true
+	in_delivery_zone = true
 
 func on_exit_delivery_zone():
-	can_deliver = false
+	in_delivery_zone = false
 
 
 func sever_tail():
