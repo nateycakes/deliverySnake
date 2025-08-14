@@ -38,7 +38,7 @@ func _input(event):
 		
 	return
 
-
+#adding this comment to test something in git
 
 
 func generate_new_pickup_location(excluded_positions : Array) -> Vector2:
