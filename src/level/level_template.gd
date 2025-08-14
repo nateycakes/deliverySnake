@@ -1,10 +1,7 @@
 extends Node2D
 class_name Level
 
-
-
-
-@onready var player_spawn_location = $PlayerSpawnLocation
+@onready var player_spawn_location: Marker2D = $PlayerSpawnLocation
 
 @onready var player_head_scene : PackedScene = preload("res://src/player/player_head.tscn")
 @onready var pickup_scene : PackedScene = preload("res://src/level/pickup.tscn")
@@ -27,6 +24,7 @@ class_name Level
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	GameManager.intiate_new_game(self)
 	place_player(player_spawn_location.global_position)
 	place_new_pickup()
 	ui_layer.score_label_container.visible = true
@@ -46,7 +44,7 @@ func place_player(input_position : Vector2) -> void:
 		get_tree().paused = false
 
 func reset_score():
-	#game_ui.score_label.text = "Score: 0"
+	ui_layer.score_label.text = "Score: 0"
 	pass
 
 

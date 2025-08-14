@@ -18,5 +18,3 @@ func snap_to_grid():
 	#snap the player to the grid (ty kidscancode)
 	position = position.snapped(Vector2.ONE * GameManager.tile_size)
 	position += Vector2.ONE * GameManager.tile_size/2
-
-

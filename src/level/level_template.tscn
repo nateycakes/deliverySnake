@@ -1,19 +1,43 @@
-[gd_scene load_steps=5 format=3 uid="uid://8yfo1exw7cc0"]
+[gd_scene load_steps=10 format=3 uid="uid://cy8k7vxg3oui7"]
 
-[ext_resource type="Script" path="res://src/level/level_template.gd" id="1_5ekxv"]
-[ext_resource type="PackedScene" uid="uid://e5w8e0bs8y0j" path="res://src/level/level_tiles.tscn" id="1_sjqa6"]
-[ext_resource type="PackedScene" uid="uid://bieuu7ive1ax0" path="res://src/level/delivery_zone.tscn" id="3_6qo40"]
-[ext_resource type="PackedScene" uid="uid://by0vk53bxwt4w" path="res://src/interface/ui_layer.tscn" id="4_e55rr"]
+[ext_resource type="PackedScene" uid="uid://ccwaulffpuhpx" path="res://src/level/level_tiles.tscn" id="1_2uhvs"]
+[ext_resource type="Script" uid="uid://c7eko7g6efdia" path="res://src/level/level_template.gd" id="1_hrcuy"]
+[ext_resource type="PackedScene" uid="uid://dd4m1cw7w6iky" path="res://src/level/delivery_zone.tscn" id="2_hrcuy"]
+[ext_resource type="Texture2D" uid="uid://wmg4k6b3j058" path="res://assets/wall.png" id="3_ywvy0"]
+[ext_resource type="Texture2D" uid="uid://cj3f0htpev5ip" path="res://assets/delivery zone tile.png" id="4_qean1"]
+[ext_resource type="PackedScene" uid="uid://bkojcvmusiins" path="res://src/interface/ui_layer.tscn" id="6_mm7o3"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qean1"]
+texture = ExtResource("3_ywvy0")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mm7o3"]
+texture = ExtResource("4_qean1")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_mm7o3"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 21
+physics_layer_1/collision_layer = 8
+physics_layer_1/collision_mask = 20
+sources/0 = SubResource("TileSetAtlasSource_qean1")
+sources/1 = SubResource("TileSetAtlasSource_mm7o3")
 
 [node name="LevelTemplate" type="Node2D"]
-process_mode = 3
-script = ExtResource("1_5ekxv")
+script = ExtResource("1_hrcuy")
+debug = null
 
-[node name="LevelTiles" parent="." instance=ExtResource("1_sjqa6")]
+[node name="LevelTiles" parent="." instance=ExtResource("1_2uhvs")]
+tile_set = SubResource("TileSet_mm7o3")
 
 [node name="PlayerSpawnLocation" type="Marker2D" parent="."]
 
-[node name="DeliveryZone" parent="." instance=ExtResource("3_6qo40")]
+[node name="DeliveryZone" parent="." instance=ExtResource("2_hrcuy")]
 
 [node name="LevelMarker_TL" type="Marker2D" parent="."]
 
@@ -23,5 +47,4 @@ script = ExtResource("1_5ekxv")
 
 [node name="LevelMarker_BR" type="Marker2D" parent="."]
 
-[node name="UILayer" parent="." instance=ExtResource("4_e55rr")]
-follow_viewport_enabled = true
+[node name="UILayer" parent="." instance=ExtResource("6_mm7o3")]

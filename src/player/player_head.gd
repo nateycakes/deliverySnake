@@ -1,22 +1,23 @@
 extends Area2D
 class_name PlayerHead
 
+
 signal hit_wall
 signal position_updated
 signal player_destroyed
 
-@onready var wall_detector = $WallDetector
-@onready var walk_speed_timer = $WalkSpeedTimer
+@onready var wall_detector : RayCast2D = $WallDetector
+@onready var walk_speed_timer : Timer = $WalkSpeedTimer
 
 @onready var last_direction : String = ""
 @export var walk_speed_value : float #this controls how fast the character moves
+@onready var is_colliding_with_self : bool = false #use to control state of player with area in/out signals, rather than every frame
 
-
-@onready var player_body_scene = preload("res://src/player/player_body.tscn")
-@onready var pickup_scene = preload("res://src/level/pickup.tscn")
+@onready var player_body_scene : PackedScene = preload("res://src/player/player_body.tscn")
+@onready var pickup_scene : PackedScene = preload("res://src/level/pickup.tscn")
 
 @onready var tail_position : Vector2 = Vector2.ZERO
-@onready var tail_node = null
+@onready var tail_node : PlayerBody = null
 
 
 @onready var body_segments : Array = []
@@ -31,7 +32,9 @@ signal player_destroyed
 func _ready():
 	snap_to_grid()
 
-
+func _process(delta: float) -> void:
+	pass
+	
 
 func _unhandled_input(event):
 	#iterate through all the diff defined positions the player can move, and grab the keys of the dict they're stored in
@@ -108,6 +111,7 @@ func add_new_body_segment():
 		body_segment_positions.push_back(new_body_segment.global_position)
 	
 	call_deferred("add_child", new_body_segment) #throws a timing/race error if we dont do it this way
+	
 
 
 func snap_to_grid():
@@ -136,11 +140,16 @@ func _on_area_entered(area):
 	
 	if area is PlayerBody:
 		if debug: print("oops we hit our tail")
+		is_colliding_with_self = true
 		player_hits_self()
 
 
 func _on_area_exited(area):
-	on_exit_delivery_zone()
+	if area is DeliveryZone:
+		on_exit_delivery_zone()
+	
+	if area is PlayerBody:
+		is_colliding_with_self = false
 
 
 func place_new_pickup(new_pickup_position : Vector2):
@@ -161,8 +170,8 @@ func body_delivery_checks():
 			delivery_count += 1
 	#compare total # in delivery zone to total number of segments
 	if delivery_count == body_segments.size(): 
-		walk_speed_timer.paused
-		await delivery_success(delivery_count)
+		walk_speed_timer.stop()
+		delivery_success(delivery_count)
 		walk_speed_timer.start(walk_speed_value)
 
 func delivery_success(count : int):
@@ -191,13 +200,16 @@ func sever_tail():
 	body_segments.clear()
 	body_segment_positions.clear()
 
-func player_hits_self():
+func destroy_player():
 	get_tree().paused = true
 	player_destroyed.emit()
-	GameManager.game_over.emit() #this is what the UI will listen for
+	GameManager.game_over.emit() #this is what the UI and Game Manager will listen for
 	walk_speed_timer.stop()
 	sever_tail()
 	queue_free()
 
+func player_hits_self():
+	destroy_player()
+
 func player_hits_wall():
-	player_hits_self() #making this separarte for future ideas
+	destroy_player() #making this separarte for future ideas

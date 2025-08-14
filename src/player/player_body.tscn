@@ -1,21 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://cc3qno0yi1g1i"]
+[gd_scene load_steps=4 format=3 uid="uid://cgr608yq81bn3"]
 
-[ext_resource type="Script" path="res://src/player/player_body.gd" id="1_wkeim"]
-[ext_resource type="Texture2D" uid="uid://337mq5ag502e" path="res://assets/player segment.png" id="2_0smah"]
+[ext_resource type="Texture2D" uid="uid://bvkskapuplr6t" path="res://assets/player segment.png" id="1_b2cut"]
+[ext_resource type="Script" uid="uid://e2au3yi4crxu" path="res://src/player/player_body.gd" id="1_dt6rp"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wdtal"]
-size = Vector2(32, 32)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dhays"]
+size = Vector2(30, 30)
 
 [node name="PlayerBody" type="Area2D"]
 collision_layer = 16
 collision_mask = 9
-script = ExtResource("1_wkeim")
+script = ExtResource("1_dt6rp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_0smah")
+texture = ExtResource("1_b2cut")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_wdtal")
+shape = SubResource("RectangleShape2D_dhays")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

@@ -1,8 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bieuu7ive1ax0"]
+[gd_scene load_steps=2 format=3 uid="uid://dd4m1cw7w6iky"]
 
-[ext_resource type="Script" path="res://src/level/delivery_zone.gd" id="1_jelba"]
+[ext_resource type="Script" uid="uid://dauhhsihvwugo" path="res://src/level/delivery_zone.gd" id="1_j22t4"]
 
 [node name="DeliveryZone" type="Area2D"]
-collision_layer = 8
-collision_mask = 0
-script = ExtResource("1_jelba")
+script = ExtResource("1_j22t4")

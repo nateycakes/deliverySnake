@@ -21,6 +21,7 @@ func _ready():
 	GameManager.game_over.connect(_on_game_over)
 	game_over_background.visible = false
 	game_over_container.visible = false
+	return
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,20 +29,24 @@ func _process(delta):
 	pass
 
 
-func _input(event):
-	#game_over_focus will only be true when there's a game over
-	if game_over_focus and event.is_action_pressed("confirm"):
-		get_tree().reload_current_scene()
-		GameManager.player_score = 0 #set this to zero because we KNOW the level is restarting
+#func _input(event):
+	##game_over_focus will only be true when there's a game over
+	#if GameManager.is_game_over and event.is_action_pressed("confirm"):
+		#GameManager.player_score = 0 #set this to zero because we KNOW the level is restarting
+		#get_tree().reload_current_scene()
+		#
+	#return
 
 
 
 
 func _on_score_update() -> void :
 	score_label.text = "Score: " + str(GameManager.player_score)
+	return
 
 func toggle_score_visibility() -> void :
 	score_label_container.visible = !score_label_container.visible
+	return
 
 func _on_game_over() -> void :
 	score_label_container.visible = false
@@ -49,7 +54,7 @@ func _on_game_over() -> void :
 	game_over_container.visible = true
 	game_over_background.visible = true
 	retry_button.grab_focus()
-	
+	return
 
 
 
@@ -59,16 +64,9 @@ func _on_game_over() -> void :
 
 func _on_retry_button_focus_entered():
 	game_over_focus = true
+	return
 
 
 func _on_retry_button_focus_exited():
 	game_over_focus = false
-
-
-
-
-
-
-
-
-
+	return

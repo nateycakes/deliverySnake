@@ -1,6 +1,7 @@
 extends Area2D
 class_name PlayerBody
 
+
 signal position_updated
 signal head_changed
 

@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://cot0e7ru6imoj"]
+[gd_scene load_steps=4 format=3 uid="uid://cicwnpfdio33a"]
 
-[ext_resource type="Script" path="res://src/level/pickup.gd" id="1_6bokg"]
-[ext_resource type="Texture2D" uid="uid://b35502gau05ad" path="res://assets/pickup.png" id="1_pvptk"]
+[ext_resource type="Script" uid="uid://boobo3avhpiul" path="res://src/level/pickup.gd" id="1_nsc4k"]
+[ext_resource type="Texture2D" uid="uid://dle1kisq6p3mn" path="res://assets/pickup.png" id="1_pphc6"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_ksawx"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_nsc4k"]
 
 [node name="Pickup" type="Area2D"]
 collision_layer = 2
-collision_mask = 0
-script = ExtResource("1_6bokg")
+collision_mask = 4
+script = ExtResource("1_nsc4k")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_pvptk")
+texture = ExtResource("1_pphc6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_ksawx")
+shape = SubResource("CircleShape2D_nsc4k")
