@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqhitbr2xlk3f"]
+
+[ext_resource type="Script" uid="uid://dyjhig21hsxi6" path="res://src/orchestration/level_manager.gd" id="1_x17l7"]
+
+[node name="LevelManager" type="Node"]
+process_mode = 3
+script = ExtResource("1_x17l7")

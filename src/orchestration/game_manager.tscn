@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqox5avknchu1"]
+
+[ext_resource type="Script" uid="uid://u2nltpvrbfv3" path="res://src/orchestration/game_manager.gd" id="1_oumax"]
+[ext_resource type="PackedScene" uid="uid://bqhitbr2xlk3f" path="res://src/orchestration/level_manager.tscn" id="2_cbdnb"]
+
+[node name="GameManager" type="Node"]
+script = ExtResource("1_oumax")
+
+[node name="LevelManager" parent="." instance=ExtResource("2_cbdnb")]
