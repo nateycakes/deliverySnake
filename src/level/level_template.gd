@@ -21,7 +21,7 @@ class_name Level
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	GameManager.intiate_new_game(self)
+	GameManager.level_manager.intiate_new_game(self)
 	place_player(player_spawn_location.global_position)
 	place_new_pickup()
 	ui_layer.score_label_container.visible = true

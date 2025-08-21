@@ -14,7 +14,7 @@ signal head_changed
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	snap_to_grid()
+	position = GameManager.level_manager.snap_to_grid(position)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,8 +24,8 @@ func _process(delta):
 
 func snap_to_grid():
 	#snap the player to the grid (ty kidscancode)
-	global_position = global_position.snapped(Vector2.ONE * GameManager.tile_size)
-	global_position += Vector2.ONE * GameManager.tile_size/2
+	global_position = global_position.snapped(Vector2.ONE * GameManager.level_manager.tile_size)
+	global_position += Vector2.ONE * GameManager.level_manager.tile_size/2
 
 
 func get_tail_node():

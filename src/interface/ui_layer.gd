@@ -17,8 +17,8 @@ class_name UILayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	GameManager.delivery_success.connect(_on_score_update) #we want to call the function, not run it!
-	GameManager.game_over.connect(_on_game_over)
+	GameManager.level_manager.delivery_success.connect(_on_score_update) #we want to call the function, not run it!
+	GameManager.level_manager.game_over.connect(_on_game_over)
 	game_over_background.visible = false
 	game_over_container.visible = false
 	return
@@ -29,19 +29,19 @@ func _process(delta):
 	pass
 
 
-#func _input(event):
-	##game_over_focus will only be true when there's a game over
-	#if GameManager.is_game_over and event.is_action_pressed("confirm"):
-		#GameManager.player_score = 0 #set this to zero because we KNOW the level is restarting
-		#get_tree().reload_current_scene()
-		#
-	#return
+func _input(event):
+	#game_over_focus will only be true when there's a game over
+	if GameManager.is_game_over and event.is_action_pressed("confirm"):
+		GameManager.score_manager.initialize_scores()
+		get_tree().reload_current_scene()
+		
+	return
 
 
 
 
 func _on_score_update() -> void :
-	score_label.text = "Score: " + str(GameManager.player_score)
+	score_label.text = "Score: " + str(GameManager.score_manager.player_current_score)
 	return
 
 func toggle_score_visibility() -> void :
@@ -50,7 +50,8 @@ func toggle_score_visibility() -> void :
 
 func _on_game_over() -> void :
 	score_label_container.visible = false
-	final_score_label.text = "Final Score: " + str(GameManager.player_score)
+	GameManager.score_manager.prepare_final_score()
+	final_score_label.text = "Final Score: " + str(GameManager.score_manager.player_total_score)
 	game_over_container.visible = true
 	game_over_background.visible = true
 	retry_button.grab_focus()

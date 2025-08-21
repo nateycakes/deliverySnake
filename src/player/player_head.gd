@@ -30,7 +30,7 @@ signal player_destroyed
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	snap_to_grid()
+	position = GameManager.level_manager.snap_to_grid(position)
 
 func _process(delta: float) -> void:
 	pass
@@ -39,8 +39,8 @@ func _process(delta: float) -> void:
 func _unhandled_input(event):
 	#iterate through all the diff defined positions the player can move, and grab the keys of the dict they're stored in
 	#the keys are named the SAME as the input action so we can take advantage in "is_action_pressed"
-	for dir in GameManager.inputs.keys():
-		if event.is_action_pressed(dir) && is_valid_direction(GameManager.inputs.get(dir)): #player has pushed a movement key!
+	for dir in GameManager.level_manager.inputs.keys():
+		if event.is_action_pressed(dir) && is_valid_direction(GameManager.level_manager.inputs.get(dir)): #player has pushed a movement key!
 			if walk_speed_timer.is_stopped(): #player hasn't started moving yet
 				walk_speed_timer.start(walk_speed_value)
 				move(dir)
@@ -51,20 +51,20 @@ func is_valid_direction(input_direction : Vector2)-> bool:
 	#this func will test if the player is trying to input an invalid move
 	# example: trying to move down while moving up, trying to move left while moving right, etc
 	
-	if input_direction == GameManager.inputs.get(last_direction):
+	if input_direction == GameManager.level_manager.inputs.get(last_direction):
 		return false #this is a duplicate keypress, FOH with that!
 	
 	#no inputting left while travelling right
-	if (input_direction == Vector2.LEFT) && (GameManager.inputs.get(last_direction) == Vector2.RIGHT):
+	if (input_direction == Vector2.LEFT) && (GameManager.level_manager.inputs.get(last_direction) == Vector2.RIGHT):
 		return false
 	#no inputting right while travelling left
-	if (input_direction == Vector2.RIGHT) && (GameManager.inputs.get(last_direction) == Vector2.LEFT):
+	if (input_direction == Vector2.RIGHT) && (GameManager.level_manager.inputs.get(last_direction) == Vector2.LEFT):
 		return false
 	#no inputting up while travelling down
-	if (input_direction == Vector2.UP) && (GameManager.inputs.get(last_direction) == Vector2.DOWN):
+	if (input_direction == Vector2.UP) && (GameManager.level_manager.inputs.get(last_direction) == Vector2.DOWN):
 		return false
 	#no inputting up while travelling down
-	if (input_direction == Vector2.DOWN) && (GameManager.inputs.get(last_direction) == Vector2.UP):
+	if (input_direction == Vector2.DOWN) && (GameManager.level_manager.inputs.get(last_direction) == Vector2.UP):
 		return false
 	
 	#if we made it this far, then we're good
@@ -72,12 +72,12 @@ func is_valid_direction(input_direction : Vector2)-> bool:
 
 func move(dir):
 	#update the raycast to see if there is a wall that we'd run into
-	wall_detector.target_position = GameManager.inputs[dir] * GameManager.tile_size
+	wall_detector.target_position = GameManager.level_manager.inputs[dir] * GameManager.level_manager.tile_size
 	wall_detector.force_raycast_update()
 	if !wall_detector.is_colliding():
 		tail_position = global_position #save our previous position for ezpz adding children
 		#print("tail position is now " + str(tail_position))
-		position += GameManager.inputs[dir] * GameManager.tile_size
+		position += GameManager.level_manager.inputs[dir] * GameManager.level_manager.tile_size
 		update_tail_positions()
 	else:
 		hit_wall.emit()
@@ -176,9 +176,9 @@ func body_delivery_checks():
 
 func delivery_success(count : int):
 	var exponent : float = float(count)
-	var delivery_points = pow(GameManager.delivery_base_score, exponent)
-	GameManager.player_score += int(delivery_points)
-	GameManager.delivery_success.emit()
+	var delivery_points = pow(GameManager.level_manager.delivery_base_score, exponent)
+	GameManager.score_manager.modify_current_score(true, int(delivery_points))
+	GameManager.level_manager.delivery_success.emit()
 	sever_tail()
 
 func on_enter_delivery_zone():
@@ -203,7 +203,7 @@ func sever_tail():
 func destroy_player():
 	get_tree().paused = true
 	player_destroyed.emit()
-	GameManager.game_over.emit() #this is what the UI and Game Manager will listen for
+	GameManager.level_manager.game_over.emit() #this is what the UI and Game Manager will listen for
 	walk_speed_timer.stop()
 	sever_tail()
 	queue_free()
