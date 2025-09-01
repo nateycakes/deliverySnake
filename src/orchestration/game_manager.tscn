@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dybri2lqplrkv" path="res://src/orchestration/score_manager.tscn" id="3_vn8u6"]
 
 [node name="GameManager" type="Node"]
+process_mode = 3
 script = ExtResource("1_oumax")
 
 [node name="LevelManager" parent="." instance=ExtResource("2_cbdnb")]

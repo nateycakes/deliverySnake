@@ -6,6 +6,7 @@ class_name ScoreManager
 
 @onready var player_total_score : int = 0
 @onready var player_current_score : int = 0
+@onready var level_score : int = 0
 
 
 func prepare_final_score():
@@ -28,6 +29,8 @@ func add_current_score_to_total_score():
 func modify_current_score(increase : bool, value: int):
 	if increase:
 		player_current_score += value
+		level_score += value
 	else:
 		player_current_score -= value
+		level_score -= value
 	return

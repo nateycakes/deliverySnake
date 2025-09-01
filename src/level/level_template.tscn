@@ -30,7 +30,7 @@ sources/1 = SubResource("TileSetAtlasSource_mm7o3")
 
 [node name="LevelTemplate" type="Node2D"]
 script = ExtResource("1_hrcuy")
-debug = null
+debug = true
 
 [node name="LevelTiles" parent="." instance=ExtResource("1_2uhvs")]
 tile_set = SubResource("TileSet_mm7o3")
@@ -38,6 +38,8 @@ tile_set = SubResource("TileSet_mm7o3")
 [node name="PlayerSpawnLocation" type="Marker2D" parent="."]
 
 [node name="DeliveryZone" parent="." instance=ExtResource("2_hrcuy")]
+
+[node name="PickupSpawnZone" type="Area2D" parent="."]
 
 [node name="LevelMarker_TL" type="Marker2D" parent="."]
 
@@ -48,3 +50,8 @@ tile_set = SubResource("TileSet_mm7o3")
 [node name="LevelMarker_BR" type="Marker2D" parent="."]
 
 [node name="UILayer" parent="." instance=ExtResource("6_mm7o3")]
+
+[node name="LevelTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="LevelTimer" to="." method="_on_level_timer_timeout"]

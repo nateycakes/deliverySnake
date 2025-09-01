@@ -3,4 +3,5 @@
 [ext_resource type="Script" uid="uid://0qg6jcj1ycr4" path="res://src/orchestration/score_manager.gd" id="1_p1wok"]
 
 [node name="ScoreManager" type="Node"]
+process_mode = 3
 script = ExtResource("1_p1wok")

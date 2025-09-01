@@ -51,9 +51,11 @@ layout_mode = 2
 text = "Final Score:"
 horizontal_alignment = 1
 
-[node name="RetryButton" type="Button" parent="GameOverContainer/VBoxContainer"]
+[node name="MenuButton" type="Button" parent="GameOverContainer/VBoxContainer"]
 layout_mode = 2
-text = "Press Enter to Retry"
+text = "Return to 
+Main Menu"
 
-[connection signal="focus_entered" from="GameOverContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_focus_entered"]
-[connection signal="focus_exited" from="GameOverContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_focus_exited"]
+[connection signal="focus_entered" from="GameOverContainer/VBoxContainer/MenuButton" to="." method="_on_retry_button_focus_entered"]
+[connection signal="focus_exited" from="GameOverContainer/VBoxContainer/MenuButton" to="." method="_on_retry_button_focus_exited"]
+[connection signal="pressed" from="GameOverContainer/VBoxContainer/MenuButton" to="." method="_on_retry_button_pressed"]

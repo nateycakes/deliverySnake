@@ -6,7 +6,7 @@ class_name UILayer
 
 @onready var game_over_container = $GameOverContainer
 @onready var final_score_label = $GameOverContainer/VBoxContainer/FinalScoreLabel
-@onready var retry_button = $GameOverContainer/VBoxContainer/RetryButton
+@onready var menu_button = $GameOverContainer/VBoxContainer/MenuButton
 @onready var game_over_text = $GameOverContainer/VBoxContainer/GameOverText
 @onready var game_over_background = $GameOverBackground
 
@@ -33,7 +33,7 @@ func _input(event):
 	#game_over_focus will only be true when there's a game over
 	if GameManager.is_game_over and event.is_action_pressed("confirm"):
 		GameManager.score_manager.initialize_scores()
-		get_tree().reload_current_scene()
+		#get_tree().reload_current_scene()
 		
 	return
 
@@ -41,7 +41,7 @@ func _input(event):
 
 
 func _on_score_update() -> void :
-	score_label.text = "Score: " + str(GameManager.score_manager.player_current_score)
+	score_label.text = "Score: " + str(GameManager.score_manager.level_score)
 	return
 
 func toggle_score_visibility() -> void :
@@ -54,7 +54,7 @@ func _on_game_over() -> void :
 	final_score_label.text = "Final Score: " + str(GameManager.score_manager.player_total_score)
 	game_over_container.visible = true
 	game_over_background.visible = true
-	retry_button.grab_focus()
+	menu_button.grab_focus()
 	return
 
 
@@ -71,3 +71,7 @@ func _on_retry_button_focus_entered():
 func _on_retry_button_focus_exited():
 	game_over_focus = false
 	return
+
+
+func _on_retry_button_pressed() -> void:
+	GameManager.restart_entire_game()

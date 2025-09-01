@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0x1kou6fnlkq"]
+
+[ext_resource type="Script" uid="uid://cl2kbv2f187tx" path="res://src/orchestration/title_screen.gd" id="1_r35wk"]
+[ext_resource type="Theme" uid="uid://ckuhxypv3hcdf" path="res://src/orchestration/menu_theme.tres" id="2_ptv65"]
+
+[node name="TitleScreen" type="Node2D"]
+script = ExtResource("1_r35wk")
+
+[node name="TitleScreenUI" type="CanvasLayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="TitleScreenUI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TitleScreenUI/CenterContainer"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+theme = ExtResource("2_ptv65")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TitleScreenUI/CenterContainer/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_ptv65")
+
+[node name="Label" type="Label" parent="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("2_ptv65")
+text = "Delivery Snake"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewGameButton" type="Button" parent="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_ptv65")
+theme_type_variation = &"NewGameButton"
+text = "New Game"
+
+[node name="QuitButton" type="Button" parent="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_ptv65")
+text = "Quit"
+
+[connection signal="pressed" from="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="TitleScreenUI/CenterContainer/PanelContainer/HBoxContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

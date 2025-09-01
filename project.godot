@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Delivery Snake Godot 4.4.1 release"
-run/main_scene="uid://b78ubrxjsrk7d"
+run/main_scene="uid://d0x1kou6fnlkq"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
