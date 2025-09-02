@@ -51,7 +51,7 @@ func toggle_score_visibility() -> void :
 func _on_game_over() -> void :
 	score_label_container.visible = false
 	GameManager.score_manager.prepare_final_score()
-	final_score_label.text = "Final Score: " + str(GameManager.score_manager.player_total_score)
+	final_score_label.text = "Final Score: " + str(GameManager.score_manager.player_game_score)
 	game_over_container.visible = true
 	game_over_background.visible = true
 	menu_button.grab_focus()

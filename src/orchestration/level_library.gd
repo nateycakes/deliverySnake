@@ -5,5 +5,6 @@ class_name LevelLibrary
 # I hope this will help alleviate the headache of where and how to load sets of levels
 
 const normal_level_list : Array = [
-	preload("res://src/level/builtLevels/first_level.tscn")
+	preload("res://src/level/builtLevels/first_level.tscn"),
+	preload("res://src/level/builtLevels/level_two.tscn")
 ]

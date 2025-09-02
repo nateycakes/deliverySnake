@@ -59,22 +59,27 @@ func initialize_new_level(calling_level : Level):
 func set_up_first_level(difficulty):
 	remaining_levels = get_level_list_by_difficulty(difficulty)
 	current_level_packed = remaining_levels.pop_front()
-	var new_level = current_level_packed.instantiate()
+	var new_level : Level = current_level_packed.instantiate()
 	current_level = new_level
+	new_level.victory_condition_met.connect(_on_level_complete)
 	add_child(new_level)
 
 
-func prepare_level(new_level_template : PackedScene):
-	var new_level = new_level_template.instantiate()
+func prepare_next_level(new_level_template : PackedScene):
+	var new_level : Level = new_level_template.instantiate()
 	previous_level = current_level
 	current_level = new_level
+
+func _on_level_complete2():
+	print("yay the level is complete")
 
 func _on_level_complete(): #only fired when the level_complete signal is caught
 	if remaining_levels.size() > 0 : #are there levels remaining?
 		var next_level_template : PackedScene = remaining_levels.pop_front() #get packed scene for next level
-		prepare_level(next_level_template) #instance new level
+		prepare_next_level(next_level_template) #instance new level
 		delete_previous_level() #remove the old level
-		get_tree().root.add_child(current_level) #append new level to tree
+		call_deferred("add_child", current_level)
+		 #append new level to tree
 	else: #there are no more remaining levels:
 		pass #load the win screen here
 
@@ -83,17 +88,17 @@ func set_game_over():
 	print("game is over!")
 
 func delete_active_level(): #need for deleting the current level when the player restarts the game
-	current_level.queue_free()
+	current_level.destroy_level()
 	print("CURRENT level deleted")
 
 func delete_previous_level(): #need for deleting the previous level when we transition to new level
-	previous_level.queue_free()
+	previous_level.destroy_level()
 	print("PREVIOUS level deleted")
 
 #unify the gridsnapping somewhere, might as well be for the level
 #snap to the actual grid, then move to the center of the tile (for scene placements)
 func snap_to_grid(input_position : Vector2):
-	#snap the player to the grid (ty kidscancode)
+	#snap the player to the grid and centered in that tile (ty kidscancode)
 	var return_position = input_position.snapped(Vector2.ONE * tile_size)
 	return_position  += Vector2.ONE * tile_size / 2
 	return return_position

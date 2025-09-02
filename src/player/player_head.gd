@@ -5,6 +5,7 @@ class_name PlayerHead
 signal hit_wall
 signal position_updated
 signal player_destroyed
+signal delivery_complete(count : int)
 
 @onready var wall_detector : RayCast2D = $WallDetector
 @onready var walk_speed_timer : Timer = $WalkSpeedTimer
@@ -178,7 +179,7 @@ func delivery_success(count : int):
 	var exponent : float = float(count)
 	var delivery_points = pow(GameManager.level_manager.delivery_base_score, exponent)
 	GameManager.score_manager.modify_current_score(true, int(delivery_points))
-	GameManager.level_manager.delivery_success.emit()
+	delivery_complete.emit(count) #emit how many we just delivered
 	sever_tail()
 
 func on_enter_delivery_zone():
@@ -206,10 +207,16 @@ func destroy_player():
 	GameManager.level_manager.game_over.emit() #this is what the UI and Game Manager will listen for
 	walk_speed_timer.stop()
 	sever_tail()
-	queue_free()
+	call_deferred("queue_free")
 
 func player_hits_self():
 	destroy_player()
 
 func player_hits_wall():
 	destroy_player() #making this separarte for future ideas
+
+
+func on_level_complete():
+	walk_speed_timer.stop()
+	print("I got called hehe")
+	#call_deferred("queue_free")

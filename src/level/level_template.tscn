@@ -50,6 +50,7 @@ tile_set = SubResource("TileSet_mm7o3")
 [node name="LevelMarker_BR" type="Marker2D" parent="."]
 
 [node name="UILayer" parent="." instance=ExtResource("6_mm7o3")]
+visible = false
 
 [node name="LevelTimer" type="Timer" parent="."]
 one_shot = true

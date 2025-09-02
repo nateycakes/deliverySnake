@@ -33,11 +33,20 @@ enum VICTORY_TYPE {
 @export var victory_timer_length : int = 300 #300 seconds -> 5 minutes
 @export var debug : bool = false
 
+#score variables - this is the most logical spot to test the scores
+@onready var player_current_score : int = 0
+@onready var player_current_delivery_count : int = 0
+@onready var player_delivery_trip_count : int = 0
+
+
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	reset_score_label() #
 	place_player(player_spawn_location.global_position)
 	place_new_pickup() #place the first pickup
+	ui_layer.visible = true
 	ui_layer.score_label_container.visible = true
 	ui_layer.game_over_container.visible = false
 
@@ -50,6 +59,8 @@ func place_player(input_position : Vector2) -> void:
 	var new_player = player_head_scene.instantiate() as PlayerHead
 	player_reference = new_player
 	new_player.global_position = input_position
+	new_player.delivery_complete.connect(on_delivery_success_received)
+	
 	call_deferred("add_child", new_player)
 	if get_tree().paused: #the game will be paused if the player just died
 		get_tree().paused = false
@@ -62,7 +73,7 @@ func reset_game():
 	place_player(player_spawn_location.global_position)
 	reset_score_label()
 
-func place_new_pickup_old() -> void:
+func place_new_pickup_old() -> void: #keeping around just in case yknow
 	
 	#gather list of already occupied locations
 	var excluded_positions : Array = player_reference.body_segment_positions.duplicate(true)
@@ -135,11 +146,7 @@ func return_eligible_pickup_placement_location(): #returns a Vector2
 	R_end.x = rect.end.x
 	R_end.y = rect.end.y
 	
-	#CS_pos = GameManager.level_manager.snap_to_grid(CS_pos)
-	#R_pos = GameManager.level_manager.snap_to_grid(R_pos)
-	#R_end = GameManager.level_manager.snap_to_grid(R_end)
-	
-	var start : Vector2 = Vector2.ZERO
+	var start : Vector2 = Vector2.ZERO #make these vectors bc its easier
 	var end : Vector2 = Vector2.ZERO
 	
 	start.x = CS_pos.x - R_end.x #CollisionShape2D position X minus half of the Rect2D's shape is the START
@@ -186,10 +193,6 @@ func place_new_pickup():
 	call_deferred("add_child", new_pickup)
 	new_pickup.global_position = new_position
 
-
-
-
-
 func reset_game_timer() -> void: #this function pauses and resets the timer to the level-defined length
 	level_timer.paused = true
 	level_timer.wait_time = victory_timer_length
@@ -202,10 +205,43 @@ func victory_check_score_amount(score : int):
 	return
 
 func victory_check_delivery_count(count :int):
+	if debug: print("checking win condition")
 	if level_type == VICTORY_TYPE.DELIVERY_COUNT && count >= victory_delivery_count:
 		if debug: print("Delivered " + str(count) + " / " + str(victory_delivery_count) + ". Victory Achieved" )
+		player_reference.on_level_complete()
 		victory_condition_met.emit()
 	return
 
+
+func on_delivery_success_received(count : int):
+	#responsible for handling when to check if the victory conditions would be met
+	if debug:
+		print("----------------------------------")
+		print("    DELIVERY SUCCESS RECEIVED")
+		print(" PLAYER DELIVERED: " + str(count))
+		print("----------------------------------")
+	player_delivery_trip_count += 1
+	update_current_delivery_count(true, count)
+	victory_check_delivery_count(player_current_delivery_count)
+
 func _on_level_timer_timeout() -> void: #just going to check the score as a default
 	victory_check_score_amount(GameManager.score_manager.player_current_score)
+
+
+func destroy_level():
+	print("destroying level")
+	call_deferred("queue_free")
+
+
+### --------------- DELIVERY AND SCORE SECTION --------------- ####
+
+func update_current_delivery_count(increase : bool, count : int):
+	if increase:
+		player_current_delivery_count += count
+		if debug: print("Delivery Count is now: " + str(player_current_delivery_count))
+		return
+	else: #yay lots of logic to catch weird < 0 cases
+		if (player_current_delivery_count <= 0) || (player_current_delivery_count - count <= 0):
+			player_current_delivery_count = 0
+		else:
+			player_current_delivery_count -= count
