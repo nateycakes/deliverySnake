@@ -218,5 +218,5 @@ func player_hits_wall():
 
 func on_level_complete():
 	walk_speed_timer.stop()
-	print("I got called hehe")
+	print("player reacted to level complete")
 	#call_deferred("queue_free")

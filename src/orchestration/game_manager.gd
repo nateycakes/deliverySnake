@@ -14,7 +14,8 @@ enum DIFFICULTY {
 	HARD
 }
 
-
+@onready var title_screen_scene : PackedScene = preload("res://src/orchestration/title_screen.tscn")
+@onready var win_screen_scene : PackedScene = preload("res://src/orchestration/win_screen.tscn")
 
 @onready var level_manager: LevelManager = $LevelManager
 @onready var score_manager: ScoreManager = $ScoreManager

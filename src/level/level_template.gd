@@ -178,10 +178,10 @@ func return_eligible_pickup_placement_location(): #returns a Vector2
 		new_position = Vector2(new_pickup_x, new_pickup_y)
 		new_position = new_position.snapped(Vector2.ONE * GameManager.level_manager.tile_size)
 	
-	if debug:
-		print("placing new pickup at " + str(new_position))
-		print("Min X: " + str(start.x) + " Max X: " + str(end.x))
-		print("Min Y: " + str(start.y) + " Max Y: " + str(end.y))
+	#if debug:
+		#print("placing new pickup at " + str(new_position))
+		#print("Min X: " + str(start.x) + " Max X: " + str(end.x))
+		#print("Min Y: " + str(start.y) + " Max Y: " + str(end.y))
 	
 	return new_position #remember, this is already snapped to the grid
 
@@ -205,7 +205,7 @@ func victory_check_score_amount(score : int):
 	return
 
 func victory_check_delivery_count(count :int):
-	if debug: print("checking win condition")
+	if debug: print("level is checking win condition...")
 	if level_type == VICTORY_TYPE.DELIVERY_COUNT && count >= victory_delivery_count:
 		if debug: print("Delivered " + str(count) + " / " + str(victory_delivery_count) + ". Victory Achieved" )
 		player_reference.on_level_complete()

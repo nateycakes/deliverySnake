@@ -67,11 +67,10 @@ func set_up_first_level(difficulty):
 
 func prepare_next_level(new_level_template : PackedScene):
 	var new_level : Level = new_level_template.instantiate()
+	new_level.victory_condition_met.connect(_on_level_complete)
 	previous_level = current_level
 	current_level = new_level
 
-func _on_level_complete2():
-	print("yay the level is complete")
 
 func _on_level_complete(): #only fired when the level_complete signal is caught
 	if remaining_levels.size() > 0 : #are there levels remaining?
@@ -81,7 +80,9 @@ func _on_level_complete(): #only fired when the level_complete signal is caught
 		call_deferred("add_child", current_level)
 		 #append new level to tree
 	else: #there are no more remaining levels:
-		pass #load the win screen here
+		delete_active_level()
+		var new_win_screen = GameManager.win_screen_scene.instantiate()
+		GameManager.call_deferred("add_child", new_win_screen)
 
 func set_game_over():
 	GameManager.set_game_over()

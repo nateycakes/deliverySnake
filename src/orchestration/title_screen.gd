@@ -9,7 +9,7 @@ extends Node2D
 func _on_new_game_button_pressed() -> void:
 	GameManager.level_manager.set_up_first_level(GameManager.DIFFICULTY.NORMAL)
 	print("new game started")
-	self.queue_free()
+	call_deferred("queue_free")
 
 
 
