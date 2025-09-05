@@ -15,6 +15,8 @@ signal level_complete
 #LEVEL MANAGEMENT VARIABLES
 @onready var previous_level : Level #used to clean up the level after transitioning to a new one
 @onready var current_level : Level
+@onready var current_difficulty : int = 0
+@onready var current_level_number : int = 0 #which level are we on out of the sequence of levels chosen (if that makes sense?)
 @onready var current_level_packed : PackedScene #need to hold onto the blueprint when they retry the level
 @onready var remaining_levels : Array = []
 @onready var level_library : LevelLibrary = preload("res://src/orchestration/level_library.tres")
@@ -43,6 +45,7 @@ func get_level_list_by_difficulty(difficulty) -> Array : #returns an array of pa
 	match difficulty:
 		GameManager.DIFFICULTY.NORMAL:
 			#do a deep copy in case we want to do funky stuff later
+			current_difficulty = GameManager.DIFFICULTY.NORMAL
 			return level_library.normal_level_list.duplicate(true)
 		_:
 			print("This error in matching Difficulty during level init should not occur")
@@ -58,16 +61,27 @@ func initialize_new_level(calling_level : Level):
 
 func set_up_first_level(difficulty):
 	remaining_levels = get_level_list_by_difficulty(difficulty)
+	current_difficulty = difficulty
 	current_level_packed = remaining_levels.pop_front()
 	var new_level : Level = current_level_packed.instantiate()
 	current_level = new_level
-	new_level.victory_condition_met.connect(_on_level_complete)
+	current_level_number = 1 #it's the first level, duh
+	new_level.level_finished.connect(_on_level_complete)
 	add_child(new_level)
 
+func calculate_current_level_number() -> int :
+	var difficulty_length : int = 0
+	var current_lvl_number : int = 0
+	match current_difficulty:
+		GameManager.DIFFICULTY.NORMAL:
+			difficulty_length = level_library.normal_level_list.size()
+	current_lvl_number = difficulty_length - remaining_levels.size()
+	return current_level_number
 
 func prepare_next_level(new_level_template : PackedScene):
 	var new_level : Level = new_level_template.instantiate()
-	new_level.victory_condition_met.connect(_on_level_complete)
+	new_level.level_finished.connect(_on_level_complete)
+	current_level_number += 1
 	previous_level = current_level
 	current_level = new_level
 

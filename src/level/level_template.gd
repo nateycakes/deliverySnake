@@ -1,7 +1,8 @@
 extends Node2D
 class_name Level
 
-signal victory_condition_met
+#signal victory_condition_met(delivery_count, player_trips) #used for adding up scores and stuff before level transition
+signal level_finished #what the level manager will listen to to delete this level and load the next one
 
 enum VICTORY_TYPE {
 	DELIVERY_COUNT,
@@ -19,12 +20,7 @@ enum VICTORY_TYPE {
 
 @onready var pickup_spawn_zone: Area2D = $PickupSpawnZone
 
-
-@onready var level_marker_tl : Marker2D = $LevelMarker_TL
-@onready var level_marker_tr : Marker2D = $LevelMarker_TR
-@onready var level_marker_bl : Marker2D = $LevelMarker_BL
-@onready var level_marker_br : Marker2D = $LevelMarker_BR
-@onready var ui_layer : CanvasLayer = $UILayer
+@onready var ui_layer : UILayer = $UILayer
 @onready var level_timer : Timer = $LevelTimer
 
 @export var level_type : VICTORY_TYPE = VICTORY_TYPE.DELIVERY_COUNT
@@ -49,11 +45,23 @@ func _ready():
 	ui_layer.visible = true
 	ui_layer.score_label_container.visible = true
 	ui_layer.game_over_container.visible = false
+	ui_layer.prepare_level_start(GameManager.level_manager.current_level_number, victory_delivery_count)
+	pause_game() #start paused
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"): #is the player trying to pause?
+		if get_tree().paused: #is the game paused?
+			unpause_game()
+		else:
+			pause_game()
+
+
 
 func place_player(input_position : Vector2) -> void:
 	var new_player = player_head_scene.instantiate() as PlayerHead
@@ -75,46 +83,46 @@ func reset_game():
 
 func place_new_pickup_old() -> void: #keeping around just in case yknow
 	
-	#gather list of already occupied locations
-	var excluded_positions : Array = player_reference.body_segment_positions.duplicate(true)
-	excluded_positions.push_back(player_reference.global_position)
-	
-	#we gotta account for the tiles, not just the x,y position, so we Mod the positions by tile size
-	var min_x_bound = level_marker_tl.global_position.x / GameManager.level_manager.tile_size
-	var max_x_bound = level_marker_tr.global_position.x / GameManager.level_manager.tile_size
-	var min_y_bound = level_marker_tl.global_position.y / GameManager.level_manager.tile_size
-	var max_y_bound = level_marker_bl.global_position.y / GameManager.level_manager.tile_size
-	
-	#now find a position in that range 
-	var new_pickup_x : int = randi_range(min_x_bound, max_x_bound)
-	var new_pickup_y : int = randi_range(min_y_bound, max_y_bound)
-	#need to scale this up to real resolution for testing
-	var new_position : Vector2 = Vector2(new_pickup_x * GameManager.level_manager.tile_size, new_pickup_y * GameManager.level_manager.tile_size)
-	
-	#loop until we find a position that isn't in the excluded list
-	while excluded_positions.find(new_position) != -1:
-		if debug: print("checking position " + str(new_position))
-		new_pickup_x = randi_range(min_x_bound, max_x_bound)
-		new_pickup_y = randi_range(min_y_bound, max_y_bound)
-		new_position = Vector2(new_pickup_x * GameManager.level_manager.tile_size, new_pickup_y * GameManager.level_manager.tile_size)
-	
-	var new_pickup : Pickup = pickup_scene.instantiate() as Pickup
-	new_pickup.collected.connect(place_new_pickup_old)
-	pickup_reference = new_pickup
-	call_deferred("add_child", new_pickup)
-	new_pickup.global_position = new_position
-	
-	if debug:
-		print("placing new pickup at " + str(new_position))
-		print("Min X: " + str(min_x_bound) + " Max X: " + str(max_x_bound))
-		print("Min Y: " + str(min_y_bound) + " Max Y: " + str(max_y_bound))
-		print("TL Bound: X:" + str(level_marker_tl.global_position.x) + " Y: " + str(level_marker_tl.global_position.y))
-	
-	var dummy : Vector2 = return_eligible_pickup_placement_location()
-	print("I COULD place a pickup here using the new method: X: " + str(dummy.x) + " , Y:" + str(dummy.y))
-	
+	##gather list of already occupied locations
+	#var excluded_positions : Array = player_reference.body_segment_positions.duplicate(true)
+	#excluded_positions.push_back(player_reference.global_position)
+	#
+	##we gotta account for the tiles, not just the x,y position, so we Mod the positions by tile size
+	##var min_x_bound = level_marker_tl.global_position.x / GameManager.level_manager.tile_size
+	##var max_x_bound = level_marker_tr.global_position.x / GameManager.level_manager.tile_size
+	##var min_y_bound = level_marker_tl.global_position.y / GameManager.level_manager.tile_size
+	##var max_y_bound = level_marker_bl.global_position.y / GameManager.level_manager.tile_size
+	#
+	##now find a position in that range 
+	##var new_pickup_x : int = randi_range(min_x_bound, max_x_bound)
+	##var new_pickup_y : int = randi_range(min_y_bound, max_y_bound)
+	##need to scale this up to real resolution for testing
+	#var new_position : Vector2 = Vector2(new_pickup_x * GameManager.level_manager.tile_size, new_pickup_y * GameManager.level_manager.tile_size)
+	#
+	##loop until we find a position that isn't in the excluded list
+	#while excluded_positions.find(new_position) != -1:
+		#if debug: print("checking position " + str(new_position))
+		#new_pickup_x = randi_range(min_x_bound, max_x_bound)
+		#new_pickup_y = randi_range(min_y_bound, max_y_bound)
+		#new_position = Vector2(new_pickup_x * GameManager.level_manager.tile_size, new_pickup_y * GameManager.level_manager.tile_size)
+	#
+	#var new_pickup : Pickup = pickup_scene.instantiate() as Pickup
+	#new_pickup.collected.connect(place_new_pickup_old)
+	#pickup_reference = new_pickup
+	#call_deferred("add_child", new_pickup)
+	#new_pickup.global_position = new_position
+	#
+	#if debug:
+		#print("placing new pickup at " + str(new_position))
+		#print("Min X: " + str(min_x_bound) + " Max X: " + str(max_x_bound))
+		#print("Min Y: " + str(min_y_bound) + " Max Y: " + str(max_y_bound))
+		#print("TL Bound: X:" + str(level_marker_tl.global_position.x) + " Y: " + str(level_marker_tl.global_position.y))
+	#
+	#var dummy : Vector2 = return_eligible_pickup_placement_location()
+	#print("I COULD place a pickup here using the new method: X: " + str(dummy.x) + " , Y:" + str(dummy.y))
+	#
 	return
-	##########  END PLACE_NEW_PICKUP() #################
+	##########  END PLACE_NEW_PICKUP() OLD #################
 
 
 func return_eligible_pickup_placement_location(): #returns a Vector2
@@ -185,6 +193,7 @@ func return_eligible_pickup_placement_location(): #returns a Vector2
 	
 	return new_position #remember, this is already snapped to the grid
 
+
 func place_new_pickup():
 	var new_position : Vector2 = return_eligible_pickup_placement_location()
 	var new_pickup : Pickup = pickup_scene.instantiate() as Pickup
@@ -193,23 +202,40 @@ func place_new_pickup():
 	call_deferred("add_child", new_pickup)
 	new_pickup.global_position = new_position
 
+
 func reset_game_timer() -> void: #this function pauses and resets the timer to the level-defined length
 	level_timer.paused = true
 	level_timer.wait_time = victory_timer_length
 	return
 
+
 func victory_check_score_amount(score : int):
 	if level_type == VICTORY_TYPE.SCORE && GameManager.score_manager.player_current_score >= victory_score_count:
 		if debug: print("Scored " + str(score) + " / " + str(victory_score_count) + " points. Victory Achieved")
-		victory_condition_met.emit()
+		victory_condition_met()
 	return
+
 
 func victory_check_delivery_count(count :int):
 	if debug: print("level is checking win condition...")
 	if level_type == VICTORY_TYPE.DELIVERY_COUNT && count >= victory_delivery_count:
 		if debug: print("Delivered " + str(count) + " / " + str(victory_delivery_count) + ". Victory Achieved" )
 		player_reference.on_level_complete()
-		victory_condition_met.emit()
+		victory_condition_met()
+		#level_finished.emit()
+	return
+
+
+func victory_condition_met() -> void :
+	#pause the game and update the UI, then display it
+	pause_game()
+	ui_layer.display_level_results(player_current_delivery_count, player_delivery_trip_count)
+	return
+
+
+func end_level() -> void:
+	unpause_game()
+	level_finished.emit()
 	return
 
 
@@ -232,6 +258,16 @@ func destroy_level():
 	print("destroying level")
 	call_deferred("queue_free")
 
+
+func pause_game():
+	get_tree().paused = true
+	print("pausing game")
+	return
+
+func unpause_game():
+	get_tree().paused = false
+	print("unpausing game")
+	return
 
 ### --------------- DELIVERY AND SCORE SECTION --------------- ####
 

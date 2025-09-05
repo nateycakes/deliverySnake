@@ -41,18 +41,12 @@ tile_set = SubResource("TileSet_mm7o3")
 
 [node name="PickupSpawnZone" type="Area2D" parent="."]
 
-[node name="LevelMarker_TL" type="Marker2D" parent="."]
-
-[node name="LevelMarker_TR" type="Marker2D" parent="."]
-
-[node name="LevelMarker_BL" type="Marker2D" parent="."]
-
-[node name="LevelMarker_BR" type="Marker2D" parent="."]
-
 [node name="UILayer" parent="." instance=ExtResource("6_mm7o3")]
 visible = false
 
 [node name="LevelTimer" type="Timer" parent="."]
 one_shot = true
 
+[connection signal="begin_level_requested" from="UILayer" to="." method="unpause_game"]
+[connection signal="next_level_requested" from="UILayer" to="." method="end_level"]
 [connection signal="timeout" from="LevelTimer" to="." method="_on_level_timer_timeout"]
