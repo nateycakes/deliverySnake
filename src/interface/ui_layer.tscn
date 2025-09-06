@@ -34,7 +34,6 @@ grow_vertical = 2
 color = Color(0.278431, 0.278431, 0.278431, 0.670588)
 
 [node name="GameOverContainer" type="CenterContainer" parent="."]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -46,13 +45,17 @@ layout_mode = 2
 
 [node name="GameOverText" type="Label" parent="GameOverContainer/VBoxContainer"]
 layout_mode = 2
-text = "Game Over"
+text = "Defeat"
 horizontal_alignment = 1
 
 [node name="FinalScoreLabel" type="Label" parent="GameOverContainer/VBoxContainer"]
 layout_mode = 2
 text = "Final Score:"
 horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="GameOverContainer/VBoxContainer"]
+layout_mode = 2
+text = "Retry"
 
 [node name="MenuButton" type="Button" parent="GameOverContainer/VBoxContainer"]
 layout_mode = 2
@@ -96,6 +99,7 @@ layout_mode = 2
 text = "Continue"
 
 [node name="LevelStartContainer" type="CenterContainer" parent="."]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -110,6 +110,13 @@ func delete_previous_level(): #need for deleting the previous level when we tran
 	previous_level.destroy_level()
 	print("PREVIOUS level deleted")
 
+func restart_current_level():
+	var restarted_level : Level = current_level_packed.instantiate()
+	restarted_level.level_finished.connect(_on_level_complete)
+	current_level.call_deferred("queue_free") 
+	call_deferred("add_child", restarted_level)
+
+
 #unify the gridsnapping somewhere, might as well be for the level
 #snap to the actual grid, then move to the center of the tile (for scene placements)
 func snap_to_grid(input_position : Vector2):

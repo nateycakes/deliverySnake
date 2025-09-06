@@ -65,7 +65,7 @@ func on_game_over():
 
 func restart_entire_game():
 	reset_game_over_status()
-	level_manager.current_level.queue_free()
+	level_manager.delete_active_level()
 	var menu_scene_template = preload("res://src/orchestration/title_screen.tscn")
 	var menu_scene = menu_scene_template.instantiate()
 	add_child(menu_scene)
