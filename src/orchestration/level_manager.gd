@@ -67,6 +67,7 @@ func set_up_first_level(difficulty):
 	current_level = new_level
 	current_level_number = 1 #it's the first level, duh
 	new_level.level_finished.connect(_on_level_complete)
+	new_level.level_reset_requested.connect(restart_current_level)
 	add_child(new_level)
 
 func calculate_current_level_number() -> int :
@@ -81,15 +82,17 @@ func calculate_current_level_number() -> int :
 func prepare_next_level(new_level_template : PackedScene):
 	var new_level : Level = new_level_template.instantiate()
 	new_level.level_finished.connect(_on_level_complete)
-	current_level_number += 1
+	new_level.level_reset_requested.connect(restart_current_level)
 	previous_level = current_level
 	current_level = new_level
+	current_level_packed = new_level_template
 
 
 func _on_level_complete(): #only fired when the level_complete signal is caught
 	if remaining_levels.size() > 0 : #are there levels remaining?
 		var next_level_template : PackedScene = remaining_levels.pop_front() #get packed scene for next level
 		prepare_next_level(next_level_template) #instance new level
+		current_level_number += 1
 		delete_previous_level() #remove the old level
 		call_deferred("add_child", current_level)
 		 #append new level to tree
@@ -111,11 +114,13 @@ func delete_previous_level(): #need for deleting the previous level when we tran
 	print("PREVIOUS level deleted")
 
 func restart_current_level():
-	var restarted_level : Level = current_level_packed.instantiate()
-	restarted_level.level_finished.connect(_on_level_complete)
-	current_level.call_deferred("queue_free") 
-	call_deferred("add_child", restarted_level)
+	current_level.call_deferred("queue_free")
+	#reuse prepare_next_level to set up the same level again
+	await(prepare_next_level(current_level_packed)) 
+	call_deferred("add_child", current_level)
 
+func reset_level_manager():
+	current_level.destroy_level()
 
 #unify the gridsnapping somewhere, might as well be for the level
 #snap to the actual grid, then move to the center of the tile (for scene placements)

@@ -3,6 +3,8 @@ class_name UILayer
 
 signal next_level_requested
 signal begin_level_requested
+signal level_restart_requested
+
 
 @onready var score_label_container = $ScoreLabelContainer
 @onready var score_label = $ScoreLabelContainer/VBoxContainer/ScoreLabel
@@ -22,7 +24,9 @@ signal begin_level_requested
 @onready var delivery_count_label: Label = $LevelStartContainer/VBoxContainer/DeliveryCountLabel
 @onready var start_level_button: Button = $LevelStartContainer/VBoxContainer/StartLevelButton
 
+@onready var retry_button: Button = $GameOverContainer/VBoxContainer/RetryButton
 
+@onready var deliveries_count_label: Label = $LevelVictoryContainer/VBoxContainer/ScoreHBoxContainer/DeliveriesVboxContainer/DeliveriesCountLabel
 
 
 @onready var game_over_focus : bool = false
@@ -86,6 +90,7 @@ func _on_game_over() -> void :
 func display_level_results(delivery_count : int, trip_count : int) -> void:
 	#this will be called by the level itself once the victory conditions are met
 	trips_count_label.text = str(trip_count)
+	deliveries_count_label.text = str(delivery_count)
 	level_victory_container.visible = true
 	game_over_background.visible = true
 	continue_button.grab_focus()
@@ -105,15 +110,19 @@ func level_begin_pressed():
 	level_start_container.visible = false
 	game_over_background.visible = false
 
-func _on_retry_button_focus_entered():
+func _on_return_to_menu_button_focus_entered():
 	game_over_focus = true
 	return
 
 
-func _on_retry_button_focus_exited():
+func _on_return_to_menu_button_focus_exited():
 	game_over_focus = false
 	return
 
 
-func _on_retry_button_pressed() -> void:
+func _on_return_to_menu_button_pressed() -> void:
 	GameManager.restart_entire_game()
+
+
+func _on_retry_button_pressed() -> void: #signal up to the level that we want to restart
+	level_restart_requested.emit()

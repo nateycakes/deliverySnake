@@ -3,6 +3,7 @@ class_name Level
 
 #signal victory_condition_met(delivery_count, player_trips) #used for adding up scores and stuff before level transition
 signal level_finished #what the level manager will listen to to delete this level and load the next one
+signal level_reset_requested
 
 enum VICTORY_TYPE {
 	DELIVERY_COUNT,
@@ -46,6 +47,7 @@ func _ready():
 	ui_layer.score_label_container.visible = true
 	ui_layer.game_over_container.visible = false
 	ui_layer.prepare_level_start(GameManager.level_manager.current_level_number, victory_delivery_count)
+	ui_layer.level_restart_requested.connect(request_level_reset)
 	pause_game() #start paused
 
 
@@ -80,6 +82,10 @@ func reset_score_label():
 func reset_game():
 	place_player(player_spawn_location.global_position)
 	reset_score_label()
+
+func request_level_reset():
+	level_reset_requested.emit()
+
 
 func place_new_pickup_old() -> void: #keeping around just in case yknow
 	

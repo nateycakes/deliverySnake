@@ -21,8 +21,8 @@ GameManager="*res://src/orchestration/game_manager.tscn"
 
 [display]
 
-window/size/viewport_width=640
-window/size/viewport_height=640
+window/size/viewport_width=704
+window/size/viewport_height=832
 window/stretch/scale_mode="integer"
 
 [input]
